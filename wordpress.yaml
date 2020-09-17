@@ -1,0 +1,52 @@
+version: "3.3"
+
+services:
+  wordpress: # <== we aren't going to open :80 here because traefik is going to serve this on entrypoint 'web'
+  # :80 is already exposed from within the container
+    image: wordpress
+    restart: unless-stopped
+    container_name: wp
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: exampleuser
+      WORDPRESS_DB_PASSWORD: examplepass
+      WORDPRESS_DB_NAME: exampledb
+    volumes:
+      - wordpress:/var/www/html
+    networks:
+      - web
+      - backend
+    labels:
+      # Labels define the behavior and rules of the traefik proxy for this container
+      - "traefik.enable=true" # <== Enable traefik to proxy this container
+      - "traefik.http.routers.nginx-web.rule=Host(`example.com`)" # <== Your Domain Name goes here for the http rule
+      - "traefik.http.routers.nginx-web.entrypoints=web" # <== Defining the entrypoint for http, **ref: line 30
+      - "traefik.http.routers.nginx-web.middlewares=redirect@file" # <== This is a middleware to redirect to https
+      - "traefik.http.routers.nginx-secured.rule=Host(`example.com`)" # <== Your Domain Name for the https rule 
+      - "traefik.http.routers.nginx-secured.entrypoints=web-secured" # <== Defining entrypoint for https, **ref: line 31
+      - "traefik.http.routers.nginx-secured.tls.certresolver=mytlschallenge" # <== Defining certsresolvers for https
+  
+  db:
+    image: mysql:5.7
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: exampledb
+      MYSQL_USER: exampleuser
+      MYSQL_PASSWORD: examplepass
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+    volumes:
+      - db:/var/lib/mysql
+    networks:
+      - backend
+      
+networks:
+  web:
+    external: true
+  backend:
+    external: false
+    
+volumes:
+  wordpress:
+    external: true
+  db:
+    external: true
