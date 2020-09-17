@@ -30,9 +30,9 @@ services:
       - --certificatesresolvers.mytlschallenge.acme.email=theafkdeveloper@gmail.com # <== Setting email for certs
       - --certificatesresolvers.mytlschallenge.acme.storage=/letsencrypt/acme.json # <== Defining acme file to store cert information
     volumes:
-      - ./letsencrypt:/letsencrypt # <== Volume for certs (TLS)
+      - ./src/letsencrypt:/letsencrypt # <== Volume for certs (TLS)
       - /var/run/docker.sock:/var/run/docker.sock # <== Volume for docker admin
-      - ./dynamic.yaml:/dynamic.yaml # <== Volume for dynamic conf file, **ref: line 27
+      - ./src/dynamic.yaml:/dynamic.yaml # <== Volume for dynamic conf file, **ref: line 27
     networks:
       - web # <== Placing traefik on the network named web, to access containers on this network
     labels:
