@@ -1,0 +1,48 @@
+version: "3.3"
+
+services:
+  wordpress-2:
+    image: wordpress
+    container_name: wp
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: exampleuser
+      WORDPRESS_DB_PASSWORD: examplepass
+      WORDPRESS_DB_NAME: exampledb
+    volumes:
+      - wordpress-2:/var/www/html
+    networks:
+      - web
+      - backend-2
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nginx-web.rule=Host(`wordpress-2.example.com`)" 
+      - "traefik.http.routers.nginx-web.entrypoints=web" 
+      - "traefik.http.routers.nginx-web.middlewares=redirect@file" 
+      - "traefik.http.routers.nginx-secured.rule=Host(`wordpress-2.example.com`)" 
+      - "traefik.http.routers.nginx-secured.entrypoints=web-secured"
+      - "traefik.http.routers.nginx-secured.tls.certresolver=mytlschallenge" 
+  
+  db-2:
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: exampledb
+      MYSQL_USER: exampleuser
+      MYSQL_PASSWORD: examplepass
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+    volumes:
+      - db-2:/var/lib/mysql
+    networks:
+      - backend-2
+      
+networks:
+  web:
+    external: true
+  backend-2:
+    external: false
+    
+volumes:
+  wordpress-2:
+    external: true
+  db-2:
+    external: true
