@@ -5,7 +5,7 @@ services:
     image: wordpress
     container_name: wp
     environment:
-      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_HOST: db-2
       WORDPRESS_DB_USER: exampleuser
       WORDPRESS_DB_PASSWORD: examplepass
       WORDPRESS_DB_NAME: exampledb
