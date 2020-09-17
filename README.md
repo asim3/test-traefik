@@ -15,7 +15,8 @@
 ## To deploy in swarm
 `sudo docker stack deploy -c traefik.yaml stack-traefik`
 
-`sudo docker stack deploy -c wordpress.yaml stack-wordpress`
+`sudo docker stack deploy -c wordpress.yaml stack-wordpress`    
+`sudo docker stack deploy -c wordpress-2.yaml stack-wordpress-2`
 
 
 ## Monitoring
