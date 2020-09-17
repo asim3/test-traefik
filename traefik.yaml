@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  my-traefik:
+    image: traefik:v2.2
+    # Enables the web UI and tells Traefik to listen to docker
+    command: --api.insecure=true --providers.docker
+    ports:
+      # The Web UI (enabled by --api.insecure=true)
+      - "8080:8080"
+      - "80:80"
+    networks:
+      # Placing traefik on the network named web, to access containers on this network
+      - web 
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+
+networks:
+  web:
+    external: true
