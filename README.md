@@ -1,6 +1,7 @@
 # test-traefik
 
-### To deploy in swarm
+
+## Prerequisite
 ##### start swarm
 `sudo docker swarm init --advertise-addr eth1`
 
@@ -11,13 +12,13 @@
 `sudo docker volume create --name=wordpress`
 
 
-##### deploy
+## To deploy in swarm
 `sudo docker stack deploy -c traefik.yaml stack-traefik`
 
 `sudo docker stack deploy -c wordpress.yaml stack-wordpress`
 
 
-#### monitor
+## Monitoring
 `sudo docker stack ps stack-traefik`
 
 `sudo docker stack ps stack-wordpress`
